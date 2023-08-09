@@ -1,0 +1,71 @@
+#include <iostream>
+#include <fstream>
+
+using namespace std;
+
+void addMemeber(string name, string address, string phone, string info) {
+    ofstream file("gymMember.dat", ios::out|ios::app);
+    file << name << "*" << address << "*" << phone << " " << info << "\n";
+    cout << "Data stored\n";
+    file.close();
+}
+
+void StringSeperator(string Data, GymMember* G, int* Size) {
+    int s = Data.size(), cnt = 0, in;
+    GymMember gym;
+    for(int i=0; i<s; ++i) {
+        if(Data[i]=='*' && cnt = 0) {
+            in = i+1;
+            for(int j=0; j<i; ++j) gym.name += Data[j];
+            ++cnt;
+        }
+        else if(cnt==1 && Data[i]=='*') {
+            for(int j=in; j<i; ++j) gym.address += Data[j];
+            ++cnt;
+            in = i+1;
+        }
+        else if(Data[i]==' ' && cnt==2) {
+            in = i+1;
+            for(int j=in; j<i; ++j) gym.phone += Data[j];
+            ++cnt;
+        }
+        else for(int j=in; j<i; ++j) gym.payInfo += Data[j];
+    }
+    G[Size++] = gym;
+}
+
+void dataRetrive(GymMember* g, int* Size) {
+    ifstream file("gymMember.dat");
+    string data;
+    if(file.fail()) cout << "failed to open file\n";
+    else {
+        if(file.peek()==EOF) {
+            cout << "No member registered\n";
+            file.close();
+        }
+        else {
+            while(!file.eof()) {
+                getline(file, data);
+                StringSeperator(data, g, &(*Size));
+            }
+            file.close();
+        }
+    }
+}
+
+void display(GymMember* g, int s) {
+    for(int i=0; i<s-1; ++i)
+        cout << "Name: " << g.name << "\n" <<
+        "Address: " << g.address << "\n" <<
+        "Phone: " << g.phone << "\n" <<
+        "Payment Information: " << g.payInfo << "\n";
+}
+
+void Delet_data() {
+    ofstream file("GymMember.dat");
+    if(file.fail()) cout << "unable to delete data\n";
+    else {
+        file.close();
+        cout << "Data deleted successfully\n";
+    }
+}
